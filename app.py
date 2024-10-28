@@ -10,7 +10,21 @@ from ibm_watsonx_ai.foundation_models import ModelInference
 # Import the YouTube API client
 from googleapiclient.discovery import build
 
+from dotenv import load_dotenv  # Import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+WATSONX_API_KEY = os.environ.get('WATSONX_API_KEY')
+if not WATSONX_API_KEY:
+    raise ValueError("The WATSONX_API_KEY environment variable is not set.")
+
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
+if not YOUTUBE_API_KEY:
+    raise ValueError("The YOUTUBE_API_KEY environment variable is not set.")
+
 app = Flask(__name__)
+
+
 
 # Load the trained model
 try:
@@ -38,14 +52,11 @@ state_to_counties = {
     for state in states
 }
 
-# Set up your Watsonx.ai credentials
-# Note: It's highly recommended to use environment variables for sensitive information
-# Replace the following with secure methods to handle credentials
+# Set up your Watsonx.ai credentials using environment variables
 credentials = Credentials(
     url="https://us-south.ml.cloud.ibm.com/",
-    api_key="iwDOQ_4_8eOg_QH86FpoLxfCo7vXlUFb6_eGolQbgdnW",
+    api_key=os.environ.get('WATSONX_API_KEY'),
 )
-
 client = APIClient(credentials)
 
 model_inference = ModelInference(
@@ -61,7 +72,7 @@ model_inference = ModelInference(
     }
 )
 
-YOUTUBE_API_KEY = 'AIzaSyDtzb6mxVfmVW2uWKNy1pGFUcKcgHrHZls'  # Ensure this environment variable is set
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')  # Ensure this environment variable is set
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
